@@ -12,16 +12,14 @@ class Chat implements MessageComponentInterface {
         $this->clients = new \SplObjectStorage;
  
         require_once dirname(__FILE__) . '/DbConnect.php'; 
-        //Creating a DbConnect object to connect to the database
-        $db = new Connect();
- 
-        //Initializing our connection link of this class
-        //by calling the method connect of DbConnect class
+        
+        $db = new Connect(); 
+       
         $this->dbCon = $db->connect();
     }
 
     public function onOpen(ConnectionInterface $conn) {
-        // Store the new connection to send messages to later
+       
         $this->clients->attach($conn);
 
         echo "New connection! ({$conn->resourceId})\n";
@@ -40,18 +38,17 @@ class Chat implements MessageComponentInterface {
         
         $array = explode(',', $msg, 3);
 
-        //1이면 데이터 받아와서 보내주기
         if($array[0] == "load"){
             $from->resourceId = $array[1];
             foreach ($this->clients as $client) {
                 if ($from == $client) {
-                    // The sender is not the receiver, send to each client connected
+                   
                     $client->resourceId = $array[1];
                 }
             }
             $this->getMessage($from, $array[2]);
         }
-        //아니면 바로 보내주고 저장
+       
         else {
             $Sender = $array[0];
             $Receiver = $array[1];
@@ -61,7 +58,7 @@ class Chat implements MessageComponentInterface {
             
             foreach ($this->clients as $client) {
                 if ($client->resourceId == $array[1]) {
-                    // The sender is not the receiver, send to each client connected
+                    
                     $client->send("0".$Text);
                 }
             }
@@ -69,7 +66,7 @@ class Chat implements MessageComponentInterface {
     }
 
     public function onClose(ConnectionInterface $conn) {
-        // The connection is closed, remove it, as we can no longer send it messages
+        
         $this->clients->detach($conn);
 
         echo "Connection {$conn->resourceId} has disconnected\n";
