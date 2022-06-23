@@ -7,19 +7,13 @@ class DbOperation
  
     
     function __construct()
-    {
-        
+    {        
         require_once dirname(__FILE__) . '/DbConnect.php';
         
         $db = new DbConnect(); 
         
         $this->con = $db->connect();
     }
- 
-
-
- 
-
  
 
  //profiles 데이터베이스 전체 읽기
