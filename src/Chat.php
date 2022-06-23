@@ -102,7 +102,7 @@ class Chat implements MessageComponentInterface {
                         $isSender = "1";
                     else
                         $isSender = "0";
-                    // The sender is not the receiver, send to each client connected
+                    
                     $client->send($isSender.$text);
                 }
             }
