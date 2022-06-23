@@ -2,93 +2,26 @@
  
 class DbOperation
 {
-    //Database connection link
+    
     private $con;
  
-    //Class constructor
+    
     function __construct()
     {
-        //Getting the DbConnect.php file
+        
         require_once dirname(__FILE__) . '/DbConnect.php';
- 
-        //Creating a DbConnect object to connect to the database
-        $db = new DbConnect();
- 
-        //Initializing our connection link of this class
-        //by calling the method connect of DbConnect class
+        
+        $db = new DbConnect(); 
+        
         $this->con = $db->connect();
     }
  
- /*
- * When this method is called a new record is created in the database
- */
- function createProfile($KakaoID, $Name, $Grade, $Introduce, $Personality, $WakeupTime, $SleepTime, $Snoring, $Noise, $Hygiene, $Smoking, $Language){
- 	$stmt = $this->con->prepare("INSERT INTO profiles (KakaoID, Name, Grade, Introduce, Personality, WakeupTime, SleepTime, Snoring, Noise, Hygiene, Smoking, Language)
-	 			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
- 	$stmt->bind_param("ssisiiiiiiii", $KakaoID, $Name, $Grade, $Introduce, $Personality, $WakeupTime, $SleepTime, $Snoring, $Noise, $Hygiene, $Smoking, $Language);
- 	if($stmt->execute())
- 	return true; 
- 	return false; 
- }
- 
- /*
- * The read operation
- * When this method is called it is returning all the existing record of the database
- */
- function getProfiles(){
- 	$stmt = $this->con->prepare("SELECT KakaoID, Name, Grade, Introduce, Personality, WakeupTime, SleepTime, Snoring, Noise, Hygiene, Smoking, Language FROM profiles");
- 	$stmt->execute();
- 	$stmt->bind_result($KakaoID, $Name, $Grade, $Introduce, $Personality, $WakeupTime, $SleepTime, $Snoring, $Noise, $Hygiene, $Smoking, $Language);
- 
- 	$profiles = array(); 
- 
- 	while($stmt->fetch()){
- 		$profile  = array();
- 		$profile['KakaoID'] = $KakaoID; 
- 		$profile['Name'] = $Name; 
- 		$profile['Grade'] = $Grade; 
- 		$profile['Introduce'] = $Introduce; 
- 		$profile['Personality'] = $Personality;
- 		$profile['WakeupTime'] = $WakeupTime;
- 		$profile['SleepTime'] = $SleepTime; 
- 		$profile['Snoring'] = $Snoring;
- 		$profile['Noise'] = $Noise;
- 		$profile['Hygiene'] = $Hygiene;
- 		$profile['Smoking'] = $Smoking;
- 		$profile['Language'] = $Language; 
 
- 		array_push($profiles, $profile); 
- 	}
+
  
-	return $profiles; 
- }
+
  
- /*
- * The update operation
- * When this method is called the record with the given id is updated with the new given values
- */
- function updateProfile($KakaoID, $Name, $Grade, $Introduce, $Personality, $WakeupTime, $SleepTime, $Snoring, $Noise, $Hygiene, $Smoking, $Language){
- 	$stmt = $this->con->prepare("UPDATE profiles SET Name = ?, Grade = ?, Introduce = ?, Personality = ?, WakeupTime = ?, SleepTime = ?, Snoring = ?, Noise = ?, Hygiene = ?, Smoking = ?, Language = ? WHERE KakaoID = ?");
- 	$stmt->bind_param("sisiiiiiiiis", $Name, $Grade, $Introduce, $Personality, $WakeupTime, $SleepTime, $Snoring, $Noise, $Hygiene, $Smoking, $Language, $KakaoID);
- 	if($stmt->execute())
- 		return true; 
- 	return false; 
- }
- 
- 
- /*
- * The delete operation
- * When this method is called record is deleted for the given id 
- */
- function deleteProfile($KakaoID){
- 	$stmt = $this->con->prepare("DELETE FROM profiles WHERE KakaoID = ? ");
- 	$stmt->bind_param("s", $KakaoID);
- 	if($stmt->execute())
- 		return true; 
- 
- 	return false; 
- 
- }
+
  //profiles 데이터베이스 전체 읽기
   function geteveryProfiles(){
     $stmt = $this->con->prepare("SELECT KakaoID, Name, Grade, Gender, Dormitory, Introduce, Personality, WakeupTime, SleepTime, Snoring, Noise, Hygiene, Smoking FROM profiles ");
@@ -206,6 +139,15 @@ function sort($KakaoID, $Gender, $Dormitory){
      return $result;
  }
 
+ function deleteProfile($KakaoID){
+ 	$stmt = $this->con->prepare("DELETE FROM profiles WHERE KakaoID = ? ");
+ 	$stmt->bind_param("s", $KakaoID);
+ 	if($stmt->execute())
+ 		return true; 
+ 
+ 	return false;
+ }
+
 function filterp($KakaoID, $Gender, $Dormitory, $Personality, $WakeupTime, $SleepTime, $Snoring, $Noise, $Hygiene, $Smoking) {
 		
 		$sql = "SELECT bot.Name, bot.Grade, bot.Introduce, bot.Profileimage, bot.Personality, bot.WakeupTime, bot.SleepTime, bot.Snoring, bot.Noise, bot.Hygiene, bot.Smoking,
@@ -251,4 +193,3 @@ function filterp($KakaoID, $Gender, $Dormitory, $Personality, $WakeupTime, $Slee
 
 
 }
-
